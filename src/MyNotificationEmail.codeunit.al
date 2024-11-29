@@ -3,7 +3,7 @@ codeunit 53100 "My Notification Email"
     Permissions = tabledata "Email Account" = R,
                   tabledata "Email Inbox" = R,
                   tabledata "Notification Entry" = R,
-                  tabledata "Approval Entry" = RM,
+                  tabledata "Approval Entry" = R,
                   tabledata "Approval Comment Line" = RIM;
 
     trigger OnRun()
@@ -30,12 +30,12 @@ codeunit 53100 "My Notification Email"
         ReplyMessage: Text;
         TrackCodeLiteralLbl: Label 'TRACKCODE #', Locked = true;
     begin
-        // Find Email Account for Notification scenario
+        // Busca la cuenta asignada al escenario Notification
         if not EmailScenario.IsThereEmailAccountSetForScenario(Enum::"Email Scenario"::Notification) then
             exit;
         EmailScenario.GetEmailAccount(Enum::"Email Scenario"::Notification, EmailAccount);
 
-        // Retrieve new emails
+        // Recupera los correos electrónicos recibidos sin leer
         Email.RetrieveEmails(EmailAccount."Account Id", EmailAccount.Connector, EmailInbox);
         if EmailInbox.FindSet() then
             repeat
@@ -51,10 +51,10 @@ codeunit 53100 "My Notification Email"
                     Clear(ApprovalProcessed);
 
                     TrackingId := CopyStr(
-                                    Body,
-                                    StrPos(Body, TrackCodeLiteralLbl) + StrLen(TrackCodeLiteralLbl),
-                                    36
-                                  );
+                                        Body,
+                                        StrPos(Body, TrackCodeLiteralLbl) + StrLen(TrackCodeLiteralLbl),
+                                        36
+                                    );
                     Body :=
                         CopyStr(
                             Body,
@@ -69,7 +69,11 @@ codeunit 53100 "My Notification Email"
 
                     NotificationEntry.GetBySystemId(TrackingId);
                     if NotificationEntry."Triggered By Record".TableNo <> Database::"Approval Entry" then
-                        ReplyMessage += StrSubstNo('La notificación %1 no corresponde a aprobación alguna.%2', TrackingId, TypeHelper.CRLFSeparator())
+                        ReplyMessage += StrSubstNo(
+                                            'La notificación %1 no corresponde a aprobación alguna.%2',
+                                            TrackingId,
+                                            TypeHelper.CRLFSeparator()
+                                        )
                     else begin
                         ApprovalEntry.Reset();
                         ApprovalEntry.Get(NotificationEntry."Triggered By Record");
@@ -79,17 +83,29 @@ codeunit 53100 "My Notification Email"
                                 'SÍ', 'SI':
                                     begin
                                         ApprovalsMgmt.ApproveApprovalRequests(ApprovalEntry);
-                                        ReplyMessage += StrSubstNo('La aprobación %1 ha sido aprobada.%2', TrackingId, TypeHelper.CRLFSeparator());
+                                        ReplyMessage += StrSubstNo(
+                                                            'La aprobación %1 ha sido aprobada.%2',
+                                                            TrackingId,
+                                                            TypeHelper.CRLFSeparator()
+                                                        );
                                         ApprovalProcessed := true;
                                     end;
                                 'NO':
                                     begin
                                         ApprovalsMgmt.RejectApprovalRequests(ApprovalEntry);
-                                        ReplyMessage += StrSubstNo('La aprobación %1 ha sido denegada.%2', TrackingId, TypeHelper.CRLFSeparator());
+                                        ReplyMessage += StrSubstNo(
+                                                            'La aprobación %1 ha sido denegada.%2',
+                                                            TrackingId,
+                                                            TypeHelper.CRLFSeparator()
+                                                        );
                                         ApprovalProcessed := true;
                                     end;
                                 else
-                                    ReplyMessage += StrSubstNo('No se ha detectado una respuesta válida para la aprobación %1%2', TrackingId, TypeHelper.CRLFSeparator());
+                                    ReplyMessage += StrSubstNo(
+                                                        'No se ha detectado una respuesta válida para la aprobación %1%2',
+                                                        TrackingId,
+                                                        TypeHelper.CRLFSeparator()
+                                                    );
                             end;
                     end;
 
@@ -104,9 +120,12 @@ codeunit 53100 "My Notification Email"
                         ApprovalCommentLine.Validate("Record ID to Approve", ApprovalEntry."Record ID to Approve");
                         ApprovalCommentLine.Validate("Workflow Step Instance ID", ApprovalEntry."Workflow Step Instance ID");
                         ApprovalCommentLine.Validate(Comment, CopyStr(
-                                                               StrSubstNo('Correo-e recibido de %1', EmailInbox."Sender Address"),
-                                                               1,
-                                                               MaxStrLen(ApprovalCommentLine.Comment)
+                                                                StrSubstNo(
+                                                                    'Correo-e recibido de %1',
+                                                                    EmailInbox."Sender Address"
+                                                                ),
+                                                                1,
+                                                                MaxStrLen(ApprovalCommentLine.Comment)
                                                             ));
                         ApprovalCommentLine.Insert(true);
 
@@ -117,15 +136,15 @@ codeunit 53100 "My Notification Email"
                         ApprovalCommentLine.Validate("Record ID to Approve", ApprovalEntry."Record ID to Approve");
                         ApprovalCommentLine.Validate("Workflow Step Instance ID", ApprovalEntry."Workflow Step Instance ID");
                         ApprovalCommentLine.Validate(Comment, CopyStr(
-                                                               Body,
-                                                               4,
-                                                               MaxStrLen(ApprovalCommentLine.Comment)
+                                                                Body,
+                                                                4,
+                                                                MaxStrLen(ApprovalCommentLine.Comment)
                                                             ));
                         ApprovalCommentLine.Insert(true);
                     end;
                 end;
 
-                // Send a reply
+                // Envía respuesta
                 if ReplyMessage <> '' then begin
                     Subject := EmailMessageReceived.GetSubject();
                     if UpperCase(CopyStr(Subject, 1, 2)) <> 'RE' then
