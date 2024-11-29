@@ -4,18 +4,18 @@ Funcionalidad para procesar las confirmaciones o rechazos a las aprobaciones que
 
 >Válido para versión de Business Central 25.0.21703.0 o superior
 ## Configuración
-**Paso 1:** Descarga e instala el archivo .app que encontrarás en el apartado *Releases* (El primer archivo .zip)
+**Paso 1:** Descarga e [instala](https://learn.microsoft.com/en-us/dynamics365/business-central/ui-extensions-install-uninstall#upload-a-per-tenant-extension-pte) el archivo .app que encontrarás en el apartado *Releases* (El primer archivo .zip)
 
-**Paso 2:** Ve a *Report Layouts*, busca el report *1320 - Notification Email - Notification with Tracking* y márcalo *Por defecto*
+**Paso 2:** Ve a [Report Layouts](https://learn.microsoft.com/en-us/dynamics365/business-central/ui-set-report-layout), busca el report *1320 - Notification Email - Notification with Tracking* y márcalo *Por defecto*
 
-**Paso 3:** Crea una cuenta compartida en [Exchange](https://learn.microsoft.com/en-us/microsoft-365/admin/email/create-a-shared-mailbox) y añádela a BC en *Email Accounts*
+**Paso 3:** [Crea](https://learn.microsoft.com/en-us/microsoft-365/admin/email/create-a-shared-mailbox) una cuenta compartida en Exchange y [añádela](https://learn.microsoft.com/en-us/dynamics365/business-central/admin-how-setup-email#add-email-accounts) a BC en *Email Accounts*
 
-**Paso 4:** Asígnale a esta nueva cuenta el escenario *Notification*
+**Paso 4:** [Asígnale](https://learn.microsoft.com/en-us/dynamics365/business-central/admin-how-setup-email#assign-email-scenarios-to-email-accounts) a esta nueva cuenta el escenario *Notification*
 >IMPORTANTE: No omitas el paso 4 para no entrar en conflicto con los correos electrónicos utilizados por otras cuentas
 
-**Paso 5:** Crea una *Job Queue Entry* para que ejecute la *codeunit 53100* cada cierto tiempo, por ejemplo cada 3 minutos
+**Paso 5:** [Crea](https://learn.microsoft.com/en-us/dynamics365/business-central/admin-job-queues-schedule-tasks) una *Job Queue Entry* para que ejecute la *codeunit 53100* cada cierto tiempo, por ejemplo cada 3 minutos
 
-**Listo:** Ahora los correos electrónicos que los workflows de aprobaciones mandan a los aprobadores podrán ser respondidos mediante Si / No, y opcionalmente un comentario, para que el registro o documento en cuestión sea aprobado o denegado mediante esta respuesta al correo electrónico recibido.
+**Listo:** Ahora los correos electrónicos que los [workflows](https://learn.microsoft.com/en-us/dynamics365/business-central/across-use-workflows) de aprobaciones mandan a los aprobadores podrán ser respondidos mediante Si / No, y opcionalmente un comentario, para que el registro o documento en cuestión sea aprobado o denegado mediante esta respuesta al correo electrónico recibido.
 
 ## Divulgación
 Esta funcionalidad ha sido desarrollada como parte de un artículo sobre el desarrollo de características complementarias en Business Central. Puedes leerlo completo aquí [Aprobacion por correo electrónico](https://joseppages.notion.site/aprobaciones-por-correo-electronico-14123005c79?pvs=4)
