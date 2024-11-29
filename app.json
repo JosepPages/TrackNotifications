@@ -1,0 +1,32 @@
+{
+  "id": "f7115345-88bf-4a9f-a060-799a28d1a683",
+  "name": "Track Notifications",
+  "publisher": "Josep Pages",
+  "version": "1.0.0.0",
+  "brief": "Procesar confirmaciones o rechazos mediante email a las aprobaciones que Business Central notifica al aprobador",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "https://joseppages.notion.site/Aprobaciones-por-correo-electr-nico-14123005c79c805d93d5cbcca96afa27?pvs=4",
+  "url": "https://github.com/JosepPages/Track-Notifications",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "25.0.0.0",
+  "idRanges": [
+    {
+      "from": 53100,
+      "to": 53109
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "14.0",
+  "features": [
+    "NoImplicitWith"
+  ]
+}
