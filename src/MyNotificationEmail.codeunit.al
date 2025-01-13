@@ -158,6 +158,8 @@ codeunit 53100 "My Notification Email"
                     );
                     Email.Send(EmailMessageReceived, EmailAccount);
                 end;
+
+                Email.MarkAsRead(EmailAccount."Account Id", EmailAccount.Connector, EmailInbox."External Message Id");
             until EmailInbox.Next() = 0;
     end;
 
