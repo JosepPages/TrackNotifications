@@ -15,7 +15,7 @@ codeunit 53100 "My Notification Email"
     var
         EmailAccount: Record "Email Account" temporary;
         EmailInbox: Record "Email Inbox";
-        Filters: Record "Email Retrieval Filters" temporary;
+        TempInputFilters: Record "Email Retrieval Filters" temporary;
         NotificationEntry: Record "Notification Entry";
         ApprovalEntry: Record "Approval Entry";
         ApprovalCommentLine: Record "Approval Comment Line";
@@ -37,8 +37,10 @@ codeunit 53100 "My Notification Email"
         EmailScenario.GetEmailAccount(Enum::"Email Scenario"::Notification, EmailAccount);
 
         // Recupera los correos electrónicos recibidos sin leer
-        Filters.SetRange("Unread Emails", true);
-        Email.RetrieveEmails(EmailAccount."Account Id", EmailAccount.Connector, EmailInbox, Filters);
+        TempInputFilters.Init();
+        TempInputFilters.Validate("Unread Emails", true);
+        TempInputFilters.Insert(true);
+        Email.RetrieveEmails(EmailAccount."Account Id", EmailAccount.Connector, EmailInbox, TempInputFilters);
         if EmailInbox.FindSet() then
             repeat
                 Clear(ReplyMessage);
@@ -156,7 +158,7 @@ codeunit 53100 "My Notification Email"
                         Subject,
                         ReplyMessage,
                         false,
-                        EmailMessageReceived.GetExternalId()
+                        EmailInbox."External Message Id"
                     );
                     Email.Send(EmailMessageReceived, EmailAccount);
                 end;
