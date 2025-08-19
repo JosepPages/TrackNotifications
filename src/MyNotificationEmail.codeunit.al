@@ -15,6 +15,7 @@ codeunit 53100 "My Notification Email"
     var
         EmailAccount: Record "Email Account" temporary;
         EmailInbox: Record "Email Inbox";
+        Filters: Record "Email Retrieval Filters" temporary;
         NotificationEntry: Record "Notification Entry";
         ApprovalEntry: Record "Approval Entry";
         ApprovalCommentLine: Record "Approval Comment Line";
@@ -36,7 +37,8 @@ codeunit 53100 "My Notification Email"
         EmailScenario.GetEmailAccount(Enum::"Email Scenario"::Notification, EmailAccount);
 
         // Recupera los correos electrónicos recibidos sin leer
-        Email.RetrieveEmails(EmailAccount."Account Id", EmailAccount.Connector, EmailInbox);
+        Filters.SetRange("Unread Emails", true);
+        Email.RetrieveEmails(EmailAccount."Account Id", EmailAccount.Connector, EmailInbox, Filters);
         if EmailInbox.FindSet() then
             repeat
                 Clear(ReplyMessage);
@@ -166,7 +168,7 @@ codeunit 53100 "My Notification Email"
     // Se establece el IsHandled porque sino el código en la CU "Approvals Mgmt." hace una comprobación de que
     //   el usuario que está aprobando o denegando sea el usuario aprobador o un admin de aprobaciones,
     //   en este caso, el usuario que esté ejecutando esta codeunit.
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforeCheckUserAsApprovalAdministrator', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", OnBeforeCheckUserAsApprovalAdministrator, '', false, false)]
     local procedure OnBeforeCheckUserAsApprovalAdministrator(var IsHandled: Boolean)
     begin
         IsHandled := true;
