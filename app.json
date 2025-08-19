@@ -2,7 +2,7 @@
   "id": "f7115345-88bf-4a9f-a060-799a28d1a683",
   "name": "Track Notifications",
   "publisher": "Josep Pages",
-  "version": "1.0.0.1",
+  "version": "1.0.0.2",
   "brief": "Procesar confirmaciones o rechazos mediante email a las aprobaciones que Business Central notifica al aprobador",
   "description": "",
   "privacyStatement": "",
